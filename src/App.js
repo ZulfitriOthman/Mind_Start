@@ -22,26 +22,40 @@ function App() {
   //Add task
   ////////////////////////////
   const addTask = () => {
-    if(newTask){
-let num = toDo.length + 1;
-let newEntry = {id: num, title: newTask, status: false}
-setToDo([...toDo, newEntry])
-setNewTask('');
+    if (newTask) {
+      let num = toDo.length + 1;
+      let newEntry = { id: num, title: newTask, status: false }
+      setToDo([...toDo, newEntry])
+      setNewTask('');
+    }
+
+    if (newTask) {
+      let num = toDo.length + 1;
+      let newEntry = { id: num, title: newTask, status: false }
+      setToDo([...toDo, newEntry])
+      setNewTask('');
+    }
+
+    if (newTask) {
+      let num = toDo.length + 1;
+      let newEntry = { id: num, title: newTask, status: false }
+      setToDo([...toDo, newEntry])
+      setNewTask('');
     }
   };
   //Delete task
   ////////////////////////////////
   const deleteTask = (id) => {
-    let newTask = toDo.filter( task => task.id !== id)
+    let newTask = toDo.filter(task => task.id !== id)
     setToDo(newTask);
   };
 
   //Mark task as done or completed
   //////////////////////////////////
   const markDone = (id) => {
-    let newTask = toDo.map ( task => {
-      if (task.id ===id) {
-        return  ({...task, status: !task.status})
+    let newTask = toDo.map(task => {
+      if (task.id === id) {
+        return ({ ...task, status: !task.status })
       }
       return task;
     })
@@ -90,33 +104,33 @@ setNewTask('');
         <br />
         <div className="col">
 
-      {/* input text */}
+          {/* input text */}
           <input
-          placeholder="Task Name"
-          value = {newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          className="form-control form-control-lg" />
+            placeholder="Task Name"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            className="form-control form-control-lg" />
 
-         <input
-          placeholder="Description"
-          value = {newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          className="form-control form-control-lg" />
+          <input
+            placeholder="Description"
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            className="form-control form-control-lg" />
 
-            <input
+          <input
             placeholder="Date"
-          value = {newTask}
-          onChange={(e) => setNewTask(e.target.value)}
-          className="form-control form-control-lg" />
+            value={newTask}
+            onChange={(e) => setNewTask(e.target.value)}
+            className="form-control form-control-lg" />
         </div>
-        
-        
+
+
 
 
         <div className="col-auto">
-          <button 
-          onClick={addTask}
-          className="btn btn-lg btn-success">Add Task</button>
+          <button
+            onClick={addTask}
+            className="btn btn-lg btn-success">Add Task</button>
         </div>
       </div>
       <br />
@@ -143,12 +157,12 @@ setNewTask('');
 
                     {task.status ? null : (
                       <span title="Edit">
-                      <FontAwesomeIcon icon={faPen} />
-                    </span>
+                        <FontAwesomeIcon icon={faPen} />
+                      </span>
                     )}
-                    
+
                     <span title="Delete"
-                    onClick={() => deleteTask(task.id)}
+                      onClick={() => deleteTask(task.id)}
                     >
                       <FontAwesomeIcon icon={faTrashCan} />
                     </span>
