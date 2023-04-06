@@ -1,18 +1,20 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./App.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCircleCheck,
-  faPen,
-  faTrashAlt,
-  faTrashCan,
-} from "@fortawesome/free-solid-svg-icons";
+import AddTaskForm from "./components/AddTaskForm";
+import ToDo from "./components/ToDo";
+import UpdateForm from "./components/UpdateForm";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import React from 'react';
+import Calendar from 'react-calendar';
+import 'react-big-calendar/lib/css/react-big-calendar.css';
 
 function App() {
   const [toDo, setToDo] = useState([
     { id: 1, title: "Task 1", status: true },
     { id: 2, title: "Task 2", status: false },
   ]);
+
+  const [date, setDate] = useState(new Date());
 
   //Temp State
   /////////////////////////////////////////
@@ -22,20 +24,6 @@ function App() {
   //Add task
   ////////////////////////////
   const addTask = () => {
-    if (newTask) {
-      let num = toDo.length + 1;
-      let newEntry = { id: num, title: newTask, status: false }
-      setToDo([...toDo, newEntry])
-      setNewTask('');
-    }
-
-    if (newTask) {
-      let num = toDo.length + 1;
-      let newEntry = { id: num, title: newTask, status: false }
-      setToDo([...toDo, newEntry])
-      setNewTask('');
-    }
-
     if (newTask) {
       let num = toDo.length + 1;
       let newEntry = { id: num, title: newTask, status: false }
@@ -64,20 +52,28 @@ function App() {
 
   //cancel update
   //////////////////////////////////
-  const cancelUpdate = (id) => {
-    //
+  const cancelUpdate = () => {
+    setUpdateData('');
   };
 
   //Change task for update
   /////////////////////////////////
-  const changeTask = (id) => {
-    //
+  const changeTask = (e) => {
+    let newEntry = {
+      id: updateData.id,
+      title: e.target.value,
+      status: updateData.status ? true : false
+    }
+    setUpdateData(newEntry);
   };
 
   //Update task
   //////////////////////////////////
-  const updateTask = (id) => {
-    //
+  const updateTask = () => {
+    let filterRecords = [...toDo].filter(task => task.id !== updateData.id);
+    let updatedObject = [...filterRecords, updateData]
+    setToDo(updatedObject);
+    setUpdateData(' ');
   };
 
   return (
@@ -89,88 +85,51 @@ function App() {
       <br />
 
       {/* Update Task */}
-      <div className="row">
-        <div className="col">
-          <input className="form-control form-control-lg" />
-        </div>
-        <div className="col-auto">
-          <button className="btn btn-lg btn-success mr-20"> Update</button>
-          <button className="btn btn-lg btn-warning">Cancel</button>
-        </div>
-      </div>
-      <br />
-      {/* Add Task */}
-      <div className="row">
-        <br />
-        <div className="col">
+      {updateData && updateData ? (
+        <UpdateForm
+          updateData={updateData}
+          changeTask={changeTask}
+          updateTask={updateTask}
+          cancelUpdate={cancelUpdate}
+        />
 
-          {/* input text */}
-          <input
-            placeholder="Task Name"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            className="form-control form-control-lg" />
+      ) : (
 
-          <input
-            placeholder="Description"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            className="form-control form-control-lg" />
+        <AddTaskForm
+          newTask={newTask}
+          setNewTask={setNewTask}
+          addTask={addTask}
+        />
 
-          <input
-            placeholder="Date"
-            value={newTask}
-            onChange={(e) => setNewTask(e.target.value)}
-            className="form-control form-control-lg" />
-        </div>
+      )}
 
-
-
-
-        <div className="col-auto">
-          <button
-            onClick={addTask}
-            className="btn btn-lg btn-success">Add Task</button>
-        </div>
-      </div>
-      <br />
       {/* display todos */}
       {toDo && toDo.length ? "" : "No Tasks..."}
+      <ToDo
+        toDo={toDo}
+        markDone={markDone}
+        setUpdateData={setUpdateData}
+        deleteTask={deleteTask}
+      />
 
-      {toDo &&
-        toDo
-          .sort((a, b) => (a.id > b.id ? 1 : -1))
-          .map((task, index) => {
-            return (
-              <React.Fragment key={task.id}>
-                <div className="col taskBg">
-                  <div className={task.status ? "done" : ""}>
-                    <span className="taskNumber">{index + 1}</span>
-                    <span className="taskText">{task.title}</span>
-                  </div>
-                  <div className="iconsWrap">
-                    <span title="Completed / Not Completed"
-                      onClick={(e) => markDone(task.id)}
-                    >
-                      <FontAwesomeIcon icon={faCircleCheck} />
-                    </span>
-
-                    {task.status ? null : (
-                      <span title="Edit">
-                        <FontAwesomeIcon icon={faPen} />
-                      </span>
-                    )}
-
-                    <span title="Delete"
-                      onClick={() => deleteTask(task.id)}
-                    >
-                      <FontAwesomeIcon icon={faTrashCan} />
-                    </span>
-                  </div>
-                </div>
-              </React.Fragment>
-            );
-          })}
+      {/* Calendar */}
+      <div className='app text-center'>
+        <h1 className='text-center'>React Calendar</h1>
+        <div className='calendar-container text-center'>
+          <Calendar className="text-center" onChange={setDate} value={date} selectRange={true} />
+        </div>
+        {date.length > 0 ? (
+          <p className="text-center">
+            <span className="text-center" >Start:</span> {' '} {date[0].toDateString()}
+            &nbsp; to &nbsp;
+            <span className="text-center">End:</span> {date[1].toDateString()}
+          </p>
+        ) : (
+          <p className="text-center">
+            <span>Default selected date:</span>{' '} {date.toDateString()}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
