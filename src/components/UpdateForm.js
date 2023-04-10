@@ -1,6 +1,7 @@
 const UpdateForm = ({ updateData, changeTask, updateTask, cancelUpdate }) => {
     return (
         <>
+        
           <div className="row">
             <div className="col">
               <input
